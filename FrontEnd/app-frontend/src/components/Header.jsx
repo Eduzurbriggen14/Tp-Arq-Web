@@ -4,7 +4,7 @@ export default function Header() {
   return (
     <header className="bg-blue-200 text-white p-4 shadow-md">
       <div className="max-w-screen-lg mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-        <h1 className="text-3xl font-extrabold tracking-wide text-blue-800">GESTOR DE CURSOS</h1>
+        <h1 className="text-3xl font-extrabold tracking-wide text-blue-800">GESTOR DE INSCRIPCIONES</h1>
         <nav className="flex flex-wrap justify-center md:justify-start gap-4">
           {["ALUMNOS", "CURSOS", "INSCRIPCIONES"].map((route) => {
             const routeTitle = route.charAt(0).toUpperCase() + route.slice(1);
