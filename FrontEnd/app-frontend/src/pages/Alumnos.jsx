@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Input from "../components/ui/input.jsx";
-import Button from "../components/ui/button.jsx";
-import { Card, CardContent } from "../components/ui/card.jsx";
+import Input from "../components/ui/input.jsx"; // Verifica que esta ruta sea correcta
+import Button from "../components/ui/button.jsx"; // Verifica que esta ruta sea correcta
+import { Card, CardContent } from "../components/ui/card.jsx"; // Verifica que esta ruta sea correcta
 
+// URL base de la API para tu entorno local (backend corriendo en IntelliJ)
 const API = "http://localhost:8080/api";
 
 export default function Alumnos() {
@@ -11,36 +12,86 @@ export default function Alumnos() {
   const [alumnos, setAlumnos] = useState([]);
   const [alumnoEditando, setAlumnoEditando] = useState({ legajo: null, nombre: "", apellido: "" });
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [errors, setErrors] = useState({}); 
 
+
+  //Cargar alumnos desde la base de datos
   const fetchAlumnos = async () => {
     try {
       const res = await axios.get(`${API}/alumnos`);
       setAlumnos(res.data);
-    } catch {
+    } catch (error) { 
+      console.error("Error al cargar alumnos:", error);
       alert("Error al cargar alumnos");
     }
   };
 
+  const validateForm = () => {
+    let newErrors = {};
+
+  
+    if (!nuevoAlumno.nombre.trim()) {
+      newErrors.nombre = "El nombre es obligatorio.";
+    }
+    if (!nuevoAlumno.apellido.trim()) {
+      newErrors.apellido = "El apellido es obligatorio.";
+    }
+    if (!nuevoAlumno.correo.trim()) {
+      newErrors.correo = "El correo es obligatorio.";
+    } else if (!/\S+@\S+\.\S+/.test(nuevoAlumno.correo)) { 
+      newErrors.correo = "El formato del correo no es válido.";
+    }
+
+    if (!nuevoAlumno.dni.trim()) { 
+      newErrors.dni = "El DNI es obligatorio.";
+    } else if (isNaN(Number(nuevoAlumno.dni))) { 
+      newErrors.dni = "El DNI debe ser un número.";
+    }
+
+    setErrors(newErrors); 
+    return Object.keys(newErrors).length === 0; 
+  };
+
   const crearAlumno = async (e) => {
     e.preventDefault(); 
+
+    if (!validateForm()) { 
+      alert("Por favor, completa todos los campos requeridos y corrige los errores.");
+      return; 
+    }
+
+    
+    
+    const dataToSend = {
+      nombre: nuevoAlumno.nombre,
+      apellido: nuevoAlumno.apellido,
+      dni: Number(nuevoAlumno.dni), 
+      correo: nuevoAlumno.correo
+    };
+
     try {
-      await axios.post(`${API}/alumnos`, nuevoAlumno);
-      setNuevoAlumno({ nombre: "", apellido: "", dni: "", correo: "" });
-      fetchAlumnos();
-    } catch {
+      await axios.post(`${API}/alumnos`, dataToSend); 
+      setNuevoAlumno({ nombre: "", apellido: "", dni: "", correo: "" }); 
+      setErrors({}); 
+      fetchAlumnos(); 
+    } catch (error) {
+      console.error("Error al crear alumno:", error.response?.data || error.message || error); 
       alert("Error al crear alumno");
     }
   };
 
+ 
   const eliminarAlumno = async (legajo) => {
     try {
       await axios.delete(`${API}/alumnos/${legajo}`);
       fetchAlumnos();
-    } catch {
+    } catch (error) {
+      console.error("Error al eliminar alumno:", error);
       alert("Error al eliminar alumno");
     }
   };
 
+ 
   const abrirModalEdicion = (alumno) => {
     setAlumnoEditando({ legajo: alumno.legajo, nombre: alumno.nombre, apellido: alumno.apellido });
     setMostrarModal(true);
@@ -59,14 +110,15 @@ export default function Alumnos() {
       });
       cerrarModal();
       fetchAlumnos();
-    } catch {
+    } catch (error) { 
+      console.error("Error al actualizar alumno:", error);
       alert("Error al actualizar alumno");
     }
   };
 
   useEffect(() => {
     fetchAlumnos();
-  }, []);
+  }, []); 
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -80,8 +132,13 @@ export default function Alumnos() {
                 id="nombre"
                 placeholder="Nombre"
                 value={nuevoAlumno.nombre}
-                onChange={e => setNuevoAlumno({ ...nuevoAlumno, nombre: e.target.value })}
+                onChange={e => {
+                  setNuevoAlumno({ ...nuevoAlumno, nombre: e.target.value });
+                  if (errors.nombre) setErrors({ ...errors, nombre: undefined });
+                }}
+                className={errors.nombre ? "border-red-500" : ""}
               />
+              {errors.nombre && <p className="text-red-500 text-xs mt-1">{errors.nombre}</p>}
             </div>
             <div>
               <label htmlFor="apellido" className="block text-sm font-medium text-gray-700 mb-1">Apellido</label>
@@ -89,17 +146,28 @@ export default function Alumnos() {
                 id="apellido"
                 placeholder="Apellido"
                 value={nuevoAlumno.apellido}
-                onChange={e => setNuevoAlumno({ ...nuevoAlumno, apellido: e.target.value })}
+                onChange={e => {
+                  setNuevoAlumno({ ...nuevoAlumno, apellido: e.target.value });
+                  if (errors.apellido) setErrors({ ...errors, apellido: undefined });
+                }}
+                className={errors.apellido ? "border-red-500" : ""}
               />
+              {errors.apellido && <p className="text-red-500 text-xs mt-1">{errors.apellido}</p>}
             </div>
             <div>
-              <label htmlFor="dni" className="block text-sm font-medium text-gray-700 mb-1">DNI</label>
+              <label htmlFor="dni" className="block text-sm font-medium text-gray-700 mb-1">DNI (sin puntos)</label>
               <Input
                 id="dni"
-                placeholder="DNI"
+                placeholder="Ej: 12555666"
                 value={nuevoAlumno.dni}
-                onChange={e => setNuevoAlumno({ ...nuevoAlumno, dni: e.target.value })}
+                onChange={e => {
+                  setNuevoAlumno({ ...nuevoAlumno, dni: e.target.value });
+                  if (errors.dni) setErrors({ ...errors, dni: undefined });
+                }}
+                type="text"
+                className={errors.dni ? "border-red-500" : ""}
               />
+              {errors.dni && <p className="text-red-500 text-xs mt-1">{errors.dni}</p>}
             </div>
             <div>
               <label htmlFor="correo" className="block text-sm font-medium text-gray-700 mb-1">Correo</label>
@@ -107,8 +175,13 @@ export default function Alumnos() {
                 id="correo"
                 placeholder="Correo"
                 value={nuevoAlumno.correo}
-                onChange={e => setNuevoAlumno({ ...nuevoAlumno, correo: e.target.value })}
+                onChange={e => {
+                  setNuevoAlumno({ ...nuevoAlumno, correo: e.target.value });
+                  if (errors.correo) setErrors({ ...errors, correo: undefined });
+                }}
+                className={errors.correo ? "border-red-500" : ""}
               />
+              {errors.correo && <p className="text-red-500 text-xs mt-1">{errors.correo}</p>}
             </div>
             <div>
               <Button type="submit" className="bg-blue-600 text-white hover:bg-blue-700">Guardar</Button>
@@ -194,5 +267,3 @@ export default function Alumnos() {
     </div>
   );
 }
-
-
