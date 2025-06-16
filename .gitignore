@@ -31,8 +31,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 pnpm-lock.yaml
-package-lock.json # Si usas npm
-yarn.lock         # Si usas yarn
+package-lock.json 
+yarn.lock         
 .vite/
 
 # Java/Spring Boot
