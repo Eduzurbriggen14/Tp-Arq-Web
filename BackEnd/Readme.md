@@ -1,4 +1,4 @@
-# Proyecto Spring Boot con MySQL
+# Proyecto Spring Boot con MySQL o H2
 
 Este proyecto es una aplicación web construida con Spring Boot y utiliza MySQL o h2 como base de datos.
 
