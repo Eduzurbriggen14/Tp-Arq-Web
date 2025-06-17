@@ -67,6 +67,25 @@ ARQUITECTURA-WEB-TP/
 
 ## Uso de la Aplicación
 
+##  Clonar el Repositorio
+
+Para comenzar con el proyecto, cloná este repositorio y accedé al directorio raíz:
+
+```bash
+git clone https://github.com/Eduzurbriggen14/Tp-Arq-Web.git
+cd Tp-Arq-Web
+
+Para instalar las dependencias navega a las carpetas correspondientes del Back y Front
+
+cd BackEnd
+./mvnw clean install
+
+cd ../FrontEnd/app-frontend
+npm install
+
+```
+
+
 * CRUD **alumnos**. La eliminacion de un alumno se realiza solo si el mismo no esta inscripto en ningun curso.
 * Agregar, listar y eliminar **cursos**. La eliminacion de un curso se realiza solo si no tiene alumnos inscriptos.
 * Inscribir **alumnos** en **cursos** y eliminar inscripciones.
@@ -76,7 +95,7 @@ ARQUITECTURA-WEB-TP/
 
 ## Autor
 
-* Zurbriggen Eduardo.
+* **Zurbriggen Eduardo**.
 
 ---
 
