@@ -58,22 +58,6 @@ public class AlumnoController {
         return ResponseEntity.created(url).body(alumnoService.crearAlumno(alumno));
     }
 
-   /* @PutMapping("/{legajo}")
-    public ResponseEntity<Alumno> modificarAlumno(@PathVariable Long legajo, @RequestBody Alumno alumnoActualizado){
-        Optional<Alumno> alumnoAModificar = alumnoService.obtenerAlumnoPorLegajo(legajo);
-        if (alumnoAModificar.isPresent()) {
-            Alumno alumnoExistente = alumnoAModificar.get();
-            alumnoExistente.setNombre(alumnoActualizado.getNombre());
-            alumnoExistente.setApellido(alumnoActualizado.getApellido());
-            alumnoExistente.setCorreo(alumnoActualizado.getCorreo());
-
-            Alumno alumnoGuardado = alumnoService.guardarAlumno(alumnoExistente);
-            return ResponseEntity.ok(alumnoGuardado);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }*/
-
     @PatchMapping("/{legajo}")
     public ResponseEntity<?> actualizarNombreApellidoAlumno(@PathVariable Long legajo, @RequestBody AlumnoPatchDTO alumnoPatch) {
         Optional<Alumno> alumnoOptional = alumnoService.obtenerAlumnoPorLegajo(legajo);
