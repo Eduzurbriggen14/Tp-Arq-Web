@@ -82,7 +82,7 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 3.  **Ejecuta la aplicación:** Ejecuta el siguiente comando, reemplazando `<nombre-del-archivo>.jar` con el nombre real del archivo JAR generado:
 
     ```bash
-    java -jar target/<nombre-del-archivo>.jar
+    java -jar target/ArqWeb-0.0.1-SNAPSHOT.jar
     ```
     Por ejemplo, si el archivo JAR se llama `ArqWeb-0.0.1-SNAPSHOT.jar`, el comando sería:
 
